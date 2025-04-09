@@ -200,6 +200,40 @@
             animation: pulse 5s infinite ease-in-out;
         }
         
+        .refresh-location-btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 8px 20px;
+            background-color: #1f6357;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-family: 'Amiri', serif;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.6s 0.8s both ease-out;
+        }
+        
+        .refresh-location-btn:hover {
+            background-color: #36857d;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .refresh-location-btn:active {
+            transform: translateY(0);
+        }
+        
+        .refresh-location-btn svg {
+            width: 14px;
+            height: 14px;
+            fill: white;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+        
         @keyframes pulse {
             0% { opacity: 0.6; }
             50% { opacity: 1; }
@@ -297,6 +331,13 @@
             </svg>
             <span id="location-text">تحديد الموقع...</span>
         </div>
+        
+        <button class="refresh-location-btn" id="refresh-location-btn" onclick="refreshLocation()">
+            إعادة تحديد الموقع
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                <path d="M105.1 202.6c7.7-21.8 20.2-42.3 37.8-59.8c62.5-62.5 163.8-62.5 226.3 0L386.3 160H336c-13.3 0-24 10.7-24 24s10.7 24 24 24H448c13.3 0 24-10.7 24-24V72c0-13.3-10.7-24-24-24s-24 10.7-24 24v51.2L407.7 107c-87.5-87.5-229.3-87.5-316.8 0C57.2 141.7 39.6 179.6 33.3 220.6c-2 12.9 7 25 20 27s25-7 27-20zm97.8 107.5c-62.5-62.5-62.5-163.8 0-226.3l16.6-16.6H264c-13.3 0-24-10.7-24-24s10.7-24 24-24H376c13.3 0 24 10.7 24 24V112c0 13.3-10.7 24-24 24s-24-10.7-24-24V62.8L334.9 79c-87.5 87.5-87.5 229.3 0 316.8c34.7 34.7 72.6 52.3 113.6 58.6c12.9 2 25-7 27-20s-7-25-20-27c-41-6.3-78.3-25.8-107.8-55.3c-21.5-21.5-36.3-46.5-43.9-73.1c-3.3-11.6-15.6-18.5-27.2-15.2s-18.5 15.6-15.2 27.2c10.2 36.2 30.1 69.5 59.4 98.8c17.6 17.6 38 30.1 59.8 37.8c13.1 4.6 27.1-2.4 31.7-15.4s-2.4-27.1-15.4-31.7z"/>
+            </svg>
+        </button>
         
         <div class="debug-info" id="debug-info"></div>
     </div>
@@ -602,6 +643,17 @@
                 const hours = date.getHours().toString().padStart(2, '0');
                 const minutes = date.getMinutes().toString().padStart(2, '0');
                 return `${hours}:${minutes}`;
+            }
+            
+            // Function to refresh location
+            function refreshLocation() {
+                document.getElementById('location-text').textContent = "جاري تحديد الموقع من جديد...";
+                document.getElementById('midnight-time').textContent = "--:--";
+                document.getElementById('last-third-time').textContent = "--:--";
+                document.getElementById('debug-info').innerHTML = "";
+                
+                // Try IP first, then browser geolocation as fallback
+                getLocationFromIP();
             }
         });
     </script>
