@@ -343,55 +343,97 @@
     </div>
 
     <script>
+        // تعريف الدالات الرئيسية كدوال عامة ليمكن استدعاؤها من زر إعادة تحديد الموقع
+        let getLocationFromIP, getLocationFromBrowser;
+        
+        // Function to refresh location - يجب أن تكون خارج نطاق DOMContentLoaded لتكون متاحة عالميًا
+        function refreshLocation() {
+            document.getElementById('location-text').textContent = "جاري تحديد الموقع من جديد...";
+            document.getElementById('midnight-time').textContent = "--:--";
+            document.getElementById('last-third-time').textContent = "--:--";
+            document.getElementById('debug-info').innerHTML = "";
+            
+            // استدعاء دالة تحديد الموقع من IP
+            getLocationFromIP();
+        }
+        
         document.addEventListener('DOMContentLoaded', function() {
             // مبدئياً نحاول الحصول على الموقع من خلال IP
-            getLocationFromIP();
-            
-            // Function to handle location error
-            function getLocationError() {
-                handleLocationFailure("تعذر تحديد الموقع");
-            }
-            
-            // Function to get location from IP address
-            function getLocationFromIP() {
+            getLocationFromIP = function() {
+                // محاولة أولى: استخدام ipapi.co
                 fetch('https://ipapi.co/json/')
-                    .then(response => response.json())
-                    .then(data => {
-                        const latitude = data.latitude;
-                        const longitude = data.longitude;
-                        const city = data.city || "";
-                        const region = data.region || "";
-                        const country = data.country_name || "";
-                        
-                        // Format full location string with all available parts
-                        let locationParts = [];
-                        if (city) locationParts.push(city);
-                        if (region && region !== city) locationParts.push(region);
-                        if (country) locationParts.push(country);
-                        
-                        const locationText = locationParts.length > 0 
-                            ? locationParts.join('، ') 
-                            : "تعذر تحديد الموقع";
-                        
-                        // Update location text
-                        document.getElementById('location-text').textContent = locationText;
-                        
-                        // Calculate prayer times if we got valid coordinates
-                        if (latitude && longitude) {
-                            calculatePrayerTimes(latitude, longitude);
-                        } else {
-                            // If IP geolocation fails, try to get user's precise location
-                            getLocationFromBrowser();
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
                         }
+                        return response.json();
+                    })
+                    .then(data => {
+                        processIPLocation(data);
                     })
                     .catch(error => {
-                        // If IP geolocation fails, try to get user's precise location
-                        getLocationFromBrowser();
+                        // محاولة ثانية: استخدام ipinfo.io كخدمة بديلة
+                        fetch('https://ipinfo.io/json')
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Network response was not ok');
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                // تحويل بيانات ipinfo.io إلى نفس هيكل بيانات ipapi.co
+                                if (data.loc) {
+                                    const [lat, lon] = data.loc.split(',');
+                                    data.latitude = parseFloat(lat);
+                                    data.longitude = parseFloat(lon);
+                                }
+                                data.city = data.city || "";
+                                data.region = data.region || "";
+                                data.country_name = data.country || "";
+                                
+                                processIPLocation(data);
+                            })
+                            .catch(error => {
+                                // If IP geolocation fails, try to get user's precise location
+                                getLocationFromBrowser();
+                            });
                     });
+            };
+            
+            // دالة لمعالجة بيانات الموقع من IP
+            function processIPLocation(data) {
+                const latitude = data.latitude;
+                const longitude = data.longitude;
+                const city = data.city || "";
+                const region = data.region || "";
+                const country = data.country_name || "";
+                
+                console.log("IP Location data:", data); // للتشخيص
+                
+                // Format full location string with all available parts
+                let locationParts = [];
+                if (city) locationParts.push(city);
+                if (region && region !== city) locationParts.push(region);
+                if (country) locationParts.push(country);
+                
+                const locationText = locationParts.length > 0 
+                    ? locationParts.join('، ') 
+                    : "تعذر تحديد الموقع";
+                
+                // Update location text
+                document.getElementById('location-text').textContent = locationText;
+                
+                // Calculate prayer times if we got valid coordinates
+                if (latitude && longitude) {
+                    calculatePrayerTimes(latitude, longitude);
+                } else {
+                    // If IP geolocation fails, try to get user's precise location
+                    getLocationFromBrowser();
+                }
             }
             
             // Function to get location from browser geolocation API
-            function getLocationFromBrowser() {
+            getLocationFromBrowser = function() {
                 document.getElementById('location-text').textContent = "جاري طلب تحديد الموقع من المتصفح...";
                 
                 if (navigator.geolocation) {
@@ -402,6 +444,14 @@
                 } else {
                     handleLocationFailure("متصفحك لا يدعم تحديد الموقع");
                 }
+            };
+            
+            // بدء تحديد الموقع عند تحميل الصفحة
+            getLocationFromIP();
+            
+            // Function to handle location error
+            function getLocationError() {
+                handleLocationFailure("تعذر تحديد الموقع");
             }
             
             // Function to handle successful location retrieval
@@ -467,10 +517,10 @@
             
             // Function to handle location failure
             function handleLocationFailure(message) {
-                document.getElementById('location-text').textContent = message;
+                document.getElementById('location-text').textContent = message + " - تم استخدام مكة المكرمة كموقع افتراضي";
                 
-                // Use Riyadh coordinates as fallback
-                calculatePrayerTimes(24.7136, 46.6753); // Riyadh coordinates
+                // استخدام إحداثيات مكة المكرمة كموقع افتراضي
+                calculatePrayerTimes(21.3891, 39.8579); // إحداثيات مكة المكرمة
             }
             
             // Function to calculate prayer times
@@ -643,17 +693,6 @@
                 const hours = date.getHours().toString().padStart(2, '0');
                 const minutes = date.getMinutes().toString().padStart(2, '0');
                 return `${hours}:${minutes}`;
-            }
-            
-            // Function to refresh location
-            function refreshLocation() {
-                document.getElementById('location-text').textContent = "جاري تحديد الموقع من جديد...";
-                document.getElementById('midnight-time').textContent = "--:--";
-                document.getElementById('last-third-time').textContent = "--:--";
-                document.getElementById('debug-info').innerHTML = "";
-                
-                // Try IP first, then browser geolocation as fallback
-                getLocationFromIP();
             }
         });
     </script>
