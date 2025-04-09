@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أوقات الصلاة - أقسام الليل للتهجد والقيام</title>
+    <!-- Favicon: Mosque icon -->
+    <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjMWY2MzU3IiBkPSJNMzguNDA1IDY0aDE3OS4ybDk0LjUxIDEzNC43NiA5My43My0xMzQuNzZoNjcuOTJMNTI4IDI1NnYyNTZoLTU0NHYtMjU2bDU0LjQtMTkyaC4wMDV6bTMyMS4xNSA0OC4wNVY0OGgtMTg4Ljd2NjRsMzIgNDggODAtMzJMMzIwIDI0MGwzOS41NiAzMVY0OC4wNXoiLz48L3N2Zz4=" type="image/svg+xml">
+    <!-- Google Fonts: Amiri for Arabic text -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Amiri', serif;
+            background-color: #f0f4f8;
+            color: #1a3b5d;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMzAgMzBtLTI4IDBhMjggMjggMCAxIDAgNTYgMCAyOCAyOCAwIDEgMC01NiAwWiIgc3Ryb2tlPSIjMWIzYzU5IiBzdHJva2Utd2lkdGg9IjAuNSIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iMC4xIi8+PHBhdGggZD0iTTMwIDMwbS0yMyAwYTIzIDIzIDAgMSAwIDQ2IDAgMjMgMjMgMCAxIDAtNDYgMFoiIHN0cm9rZT0iIzFiM2M1OSIgc3Ryb2tlLXdpZHRoPSIwLjUiIGZpbGw9Im5vbmUiIG9wYWNpdHk9IjAuMSIvPjxwYXRoIGQ9Ik0zMCAzMG0tMTggMGExOCAxOCAwIDEgMCAzNiAwIDE4IDE4IDAgMSAwLTM2IDBaIiBzdHJva2U9IiMxYjNjNTkiIHN0cm9rZS13aWR0aD0iMC41IiBmaWxsPSJub25lIiBvcGFjaXR5PSIwLjEiLz48cGF0aCBkPSJNMzAgMzBtLTEzIDBhMTMgMTMgMCAxIDAgMjYgMCAxMyAxMyAwIDEgMC0yNiAwWiIgc3Ryb2tlPSIjMWIzYzU5IiBzdHJva2Utd2lkdGg9IjAuNSIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iMC4xIi8+PHBhdGggZD0iTTMwIDMwbS04IDBhOCA4IDAgMSAwIDE2IDAgOCA4IDAgMSAwLTE2IDBaIiBzdHJva2U9IiMxYjNjNTkiIHN0cm9rZS13aWR0aD0iMC41IiBmaWxsPSJub25lIiBvcGFjaXR5PSIwLjEiLz48L3N2Zz4=');
+            background-position: center;
+            background-size: 150px;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(54, 133, 125, 0.2);
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(90deg, #1f6357, #36857d);
+        }
+        
+        /* Crescent moon decoration */
+        .container::after {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 40px;
+            height: 40px;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHBhdGggZmlsbD0iI2Q0YWYzNyIgZD0iTTE2IDE0YzAtMy45LTEuMy03LjQtMy41LTEwLjIgNy42LjkgMTMuNSA3LjMgMTMuNSAxNS4yIDAgOC41LTYuOSAxNS40LTE1LjQgMTUuNC03LjkgMC0xNC4zLTUuOS0xNS4yLTEzLjVDNy42IDIyLjcgMTEuMSAyNCAxNSAyNGM2LjEgMCAxMS01IDExLTExIDAtMy45LTItNy4yLTUtOS4yaDB6IiBvcGFjaXR5PSIwLjgiLz48L3N2Zz4=');
+            background-size: contain;
+            background-repeat: no-repeat;
+            opacity: 0.2;
+        }
+        
+        h1 {
+            font-size: 36px;
+            margin-bottom: 30px;
+            color: #1f6357;
+            font-weight: 700;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, #d4af37, #f9e076, #d4af37);
+            border-radius: 3px;
+        }
+        
+        .prayer-time {
+            margin-bottom: 25px;
+            padding: 25px;
+            border-radius: 12px;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(54, 133, 125, 0.1);
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 0.6s 0.2s both ease-out;
+        }
+        
+        .prayer-time::after {
+            content: '';
+            position: absolute;
+            right: -15px;
+            bottom: -15px;
+            width: 80px;
+            height: 80px;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5NiA5NiI+PHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMWY2MzU3IiBzdHJva2Utd2lkdGg9IjEiIG9wYWNpdHk9IjAuMSIgZD0iTTI0IDQyLjVMNDggMjRsNDggNDgtNDggNDh6TTE2LjUgMTYuNUw0OCAzNi41TTI0IDY4LjVsMjQtMTZNMzAgNDJsMTgtMThNMTIgNDhsNjAgNjBNNDggMTJsNDggNDgiLz48L3N2Zz4=');
+            background-repeat: no-repeat;
+            opacity: 0.05;
+            z-index: 0;
+        }
+        
+        .prayer-time:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-color: rgba(54, 133, 125, 0.3);
+        }
+        
+        .prayer-label {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #1a3b5d;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .prayer-value {
+            font-size: 24px;
+            color: #1f6357;
+            font-weight: 400;
+            display: inline-block;
+            direction: ltr; /* Time values display from left to right */
+            padding: 8px 20px;
+            border-radius: 8px;
+            background-color: #f0f7f6;
+            border: 1px solid rgba(54, 133, 125, 0.2);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .prayer-value::before {
+            content: "⏱";
+            margin-right: 8px;
+            opacity: 0.6;
+        }
+        
+        .loading-text {
+            font-size: 18px;
+            color: #5c7d98;
+            margin-top: 20px;
+        }
+        
+        .geometric-pattern {
+            position: absolute;
+            opacity: 0.05;
+            width: 300px;
+            height: 300px;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+PHBhdGggZD0iTTUwIDUwbTAgMGwyNS0yNW0wIDBsMjUtMjVtMCAwaC0yNW0wIDBIMTAwbS0xMDAgMHYyNW0wIDB2NTBtMCAwaDI1bTAgMGg1MG0wIDBsMjUtMjVtMCAwaC01MG0wIDBINTBtMCAwbC0yNSAyNW0wIDBINTBtMCAwaDUwbTAgMHYtNTBtMCAwdi0yNW0wIDBoLTUwbTAgMEg1MG0wIDBsLTI1LTI1bTAgMEg1MG0wIDBINzVtMCAwbDI1LTI1bTAgMGgtNTBtMCAwSDBtMCAwaDBtMCAwdjEwMG0wIDB2MCIgc3Ryb2tlPSIjMWM2NDU4IiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiLz48L3N2Zz4=');
+            top: 0;
+            right: 0;
+            z-index: -1;
+        }
+        
+        .location-info {
+            margin-top: 30px;
+            font-size: 18px;
+            color: #5c7d98;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background-color: rgba(240, 244, 248, 0.7);
+            padding: 10px 20px;
+            border-radius: 30px;
+            display: inline-flex;
+            border: 1px solid rgba(54, 133, 125, 0.1);
+            transition: all 0.3s ease;
+            animation: fadeIn 0.6s 0.6s both ease-out;
+        }
+        
+        .location-info:hover {
+            background-color: rgba(240, 244, 248, 0.9);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .location-icon {
+            width: 18px;
+            height: 18px;
+            fill: #5c7d98;
+            animation: pulse 5s infinite ease-in-out;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+
+        .debug-info {
+            margin-top: 30px;
+            font-size: 12px;
+            color: #5c7d98;
+            text-align: left;
+            direction: ltr;
+            background-color: rgba(240, 244, 248, 0.5);
+            padding: 10px;
+            border-radius: 8px;
+        }
+        
+        /* Fade-in animation for content */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .container {
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        .prayer-time:nth-child(2) {
+            animation: fadeIn 0.6s 0.2s both ease-out;
+        }
+        
+        .prayer-time:nth-child(3) {
+            animation: fadeIn 0.6s 0.4s both ease-out;
+        }
+        
+        .location-info {
+            animation: fadeIn 0.6s 0.6s both ease-out;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+            }
+            
+            h1 {
+                font-size: 30px;
+            }
+            
+            .prayer-label {
+                font-size: 24px;
+            }
+            
+            .prayer-value {
+                font-size: 20px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .prayer-label {
+                font-size: 20px;
+            }
+            
+            .prayer-value {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="geometric-pattern"></div>
+        <h1>أقسام الليل</h1>
+        
+        <div class="prayer-time">
+            <div class="prayer-label">منتصف الليل يبدأ الساعة</div>
+            <div class="prayer-value" id="midnight-time">--:--</div>
+        </div>
+        
+        <div class="prayer-time">
+            <div class="prayer-label">الثلث الأخير من الليل يبدأ الساعة</div>
+            <div class="prayer-value" id="last-third-time">--:--</div>
+        </div>
+        
+        <div class="location-info">
+            <svg class="location-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+                <path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 256c-35.3 0-64-28.7-64-64s28.7-64 64-64s64 28.7 64 64s-28.7 64-64 64z"/>
+            </svg>
+            <span id="location-text">تحديد الموقع...</span>
+        </div>
+        
+        <div class="debug-info" id="debug-info"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get user's location
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(getLocationSuccess, getLocationError);
+            } else {
+                handleLocationFailure("متصفحك لا يدعم تحديد الموقع");
+            }
+            
+            // Function to handle successful location retrieval
+            function getLocationSuccess(position) {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+                
+                // Fetch city name based on coordinates
+                fetchLocationName(latitude, longitude);
+                
+                // Calculate prayer times
+                calculatePrayerTimes(latitude, longitude);
+            }
+            
+            // Function to handle location error
+            function getLocationError() {
+                // If geolocation fails, try to get location from IP
+                getLocationFromIP();
+            }
+            
+            // Function to get location from IP address
+            function getLocationFromIP() {
+                fetch('https://ipapi.co/json/')
+                    .then(response => response.json())
+                    .then(data => {
+                        const latitude = data.latitude;
+                        const longitude = data.longitude;
+                        const city = data.city || "";
+                        const region = data.region || "";
+                        const country = data.country_name || "";
+                        
+                        // Format full location string with all available parts
+                        let locationParts = [];
+                        if (city) locationParts.push(city);
+                        if (region && region !== city) locationParts.push(region);
+                        if (country) locationParts.push(country);
+                        
+                        const locationText = locationParts.length > 0 
+                            ? locationParts.join('، ') 
+                            : "تعذر تحديد الموقع";
+                        
+                        // Update location text
+                        document.getElementById('location-text').textContent = locationText;
+                        
+                        // Calculate prayer times
+                        calculatePrayerTimes(latitude, longitude);
+                    })
+                    .catch(error => {
+                        handleLocationFailure("تعذر تحديد الموقع");
+                    });
+            }
+            
+            // Function to fetch location name
+            function fetchLocationName(latitude, longitude) {
+                fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&accept-language=ar`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.address) {
+                            // Extract all possible locality information
+                            const city = data.address.city || "";
+                            const town = data.address.town || "";
+                            const village = data.address.village || "";
+                            const suburb = data.address.suburb || "";
+                            const county = data.address.county || "";
+                            const state = data.address.state || "";
+                            const country = data.address.country || "";
+                            
+                            // Build location text from most specific to least specific
+                            let locationParts = [];
+                            
+                            // Add the most specific locality first (only one of these)
+                            if (city) locationParts.push(city);
+                            else if (town) locationParts.push(town);
+                            else if (village) locationParts.push(village);
+                            else if (suburb) locationParts.push(suburb);
+                            else if (county) locationParts.push(county);
+                            
+                            // Add state if available and different from city
+                            if (state && !locationParts.includes(state)) {
+                                locationParts.push(state);
+                            }
+                            
+                            // Add country if available
+                            if (country) {
+                                locationParts.push(country);
+                            }
+                            
+                            const locationText = locationParts.length > 0 
+                                ? locationParts.join('، ') 
+                                : "تم تحديد الموقع";
+                            
+                            document.getElementById('location-text').textContent = locationText;
+                        } else {
+                            document.getElementById('location-text').textContent = "تم تحديد الموقع";
+                        }
+                    })
+                    .catch(error => {
+                        document.getElementById('location-text').textContent = "تم تحديد الموقع";
+                    });
+            }
+            
+            // Function to handle location failure
+            function handleLocationFailure(message) {
+                document.getElementById('location-text').textContent = message;
+                
+                // Use Riyadh coordinates as fallback
+                calculatePrayerTimes(24.7136, 46.6753); // Riyadh coordinates
+            }
+            
+            // Function to calculate prayer times
+            function calculatePrayerTimes(latitude, longitude) {
+                // Get today's date in YYYY-MM-DD format for the API
+                const today = new Date();
+                const dateString = today.toISOString().split('T')[0];
+                
+                // Use accurate prayer times API for Islamic prayer times
+                const apiUrl = `https://api.aladhan.com/v1/timings/${dateString}?latitude=${latitude}&longitude=${longitude}&method=4`;
+                
+                fetch(apiUrl)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.code === 200 && data.data) {
+                            // Extract maghrib time
+                            const timings = data.data.timings;
+                            const maghribStr = timings.Maghrib;
+                            const todayMaghrib = createTimeDate(today, maghribStr);
+                            
+                            // Now get tomorrow's Fajr time from a separate API call
+                            const tomorrow = new Date(today);
+                            tomorrow.setDate(today.getDate() + 1);
+                            const tomorrowString = tomorrow.toISOString().split('T')[0];
+                            
+                            fetch(`https://api.aladhan.com/v1/timings/${tomorrowString}?latitude=${latitude}&longitude=${longitude}&method=4`)
+                                .then(response => response.json())
+                                .then(tomorrowData => {
+                                    if (tomorrowData.code === 200 && tomorrowData.data) {
+                                        // Extract fajr time for tomorrow
+                                        const tomorrowTimings = tomorrowData.data.timings;
+                                        const fajrStr = tomorrowTimings.Fajr;
+                                        const tomorrowFajr = createTimeDate(tomorrow, fajrStr);
+                                        
+                                        calculateAndDisplayNightTimes(todayMaghrib, tomorrowFajr);
+                                    } else {
+                                        // Fallback to using today's Fajr time but add 24 hours
+                                        const fajrStr = timings.Fajr;
+                                        const tomorrowFajr = createTimeDate(tomorrow, fajrStr);
+                                        calculateAndDisplayNightTimes(todayMaghrib, tomorrowFajr);
+                                    }
+                                })
+                                .catch(error => {
+                                    // Fallback to using today's Fajr time but add 24 hours
+                                    const fajrStr = timings.Fajr;
+                                    const tomorrowFajr = createTimeDate(tomorrow, fajrStr);
+                                    calculateAndDisplayNightTimes(todayMaghrib, tomorrowFajr);
+                                });
+                        } else {
+                            fallbackCalculation(latitude, longitude);
+                        }
+                    })
+                    .catch(error => {
+                        fallbackCalculation(latitude, longitude);
+                    });
+            }
+            
+            // Function to create a Date object with specific time
+            function createTimeDate(baseDate, timeStr) {
+                const [hours, minutes] = timeStr.split(':').map(Number);
+                const result = new Date(baseDate);
+                result.setHours(hours, minutes, 0, 0);
+                return result;
+            }
+            
+            // Calculate and display the night prayer times
+            function calculateAndDisplayNightTimes(maghribTime, fajrTime) {
+                // Make sure fajr is after maghrib (should be next day)
+                if (fajrTime <= maghribTime) {
+                    fajrTime.setDate(fajrTime.getDate() + 1);
+                }
+                
+                // Calculate night duration in milliseconds
+                const nightDurationMs = fajrTime.getTime() - maghribTime.getTime();
+                
+                // Make sure night duration is positive
+                if (nightDurationMs <= 0) {
+                    document.getElementById('debug-info').innerHTML += "<br>ERROR: Night duration is not positive!";
+                    return;
+                }
+                
+                // Calculate midnight time (Maghrib + half of night duration)
+                const midnightTime = new Date(maghribTime.getTime() + (nightDurationMs / 2));
+                
+                // Calculate last third of night time (Maghrib + 2/3 of night duration)
+                const lastThirdTime = new Date(maghribTime.getTime() + (nightDurationMs * 2 / 3));
+                
+                // Make sure last third comes after midnight
+                if (lastThirdTime <= midnightTime) {
+                    document.getElementById('debug-info').innerHTML += "<br>ERROR: Last third is before midnight!";
+                    return;
+                }
+                
+                // Update the UI
+                document.getElementById('midnight-time').textContent = formatTime(midnightTime);
+                document.getElementById('last-third-time').textContent = formatTime(lastThirdTime);
+                
+                // Show detailed debug info
+                const nightHours = nightDurationMs / (1000 * 60 * 60);
+                const debugInfo = `
+                    Maghrib: ${formatTime(maghribTime)}<br>
+                    Tomorrow's Fajr: ${formatTime(fajrTime)}<br>
+                    Night Duration: ${nightHours.toFixed(2)} hours (${Math.round(nightDurationMs / (1000 * 60))} minutes)<br>
+                    Midnight: ${formatTime(midnightTime)}<br>
+                    Last Third: ${formatTime(lastThirdTime)}
+                `;
+                document.getElementById('debug-info').innerHTML = debugInfo;
+            }
+            
+            // Fallback calculation method if API fails
+            function fallbackCalculation(latitude, longitude) {
+                const today = new Date();
+                const tomorrow = new Date(today);
+                tomorrow.setDate(today.getDate() + 1);
+                
+                // Simplified calculation for Maghrib (sunset)
+                const maghribTime = estimateMaghribTime(today, latitude, longitude);
+                
+                // Simplified calculation for tomorrow's Fajr
+                const fajrTime = estimateFajrTime(tomorrow, latitude, longitude);
+                
+                // Calculate and display night times
+                calculateAndDisplayNightTimes(maghribTime, fajrTime);
+                
+                document.getElementById('debug-info').innerHTML += "<br>Note: Using fallback calculations (less accurate).";
+            }
+            
+            // Estimate Maghrib time (simplified)
+            function estimateMaghribTime(date, latitude, longitude) {
+                // Create a date for today at 6:30 PM (average Maghrib time)
+                const maghribTime = new Date(date);
+                // Default Maghrib around 18:00 but adjust for location
+                const baseHour = 18;
+                
+                // Season adjustment (earlier in winter, later in summer)
+                const month = date.getMonth();
+                let seasonAdjust = 0;
+                if (month >= 4 && month <= 8) { // May to September
+                    seasonAdjust = 1; // Later in summer
+                } else if (month >= 10 || month <= 2) { // November to March
+                    seasonAdjust = -1; // Earlier in winter
+                }
+                
+                maghribTime.setHours(baseHour + seasonAdjust, 30, 0, 0);
+                return maghribTime;
+            }
+            
+            // Estimate Fajr time (simplified)
+            function estimateFajrTime(date, latitude, longitude) {
+                // Create a date for tomorrow at 5:00 AM (average Fajr time)
+                const fajrTime = new Date(date);
+                // Default Fajr around 5:00 but adjust for location
+                const baseHour = 5;
+                
+                // Season adjustment (earlier in summer, later in winter)
+                const month = date.getMonth();
+                let seasonAdjust = 0;
+                if (month >= 4 && month <= 8) { // May to September
+                    seasonAdjust = -1; // Earlier in summer
+                } else if (month >= 10 || month <= 2) { // November to March
+                    seasonAdjust = 1; // Later in winter
+                }
+                
+                fajrTime.setHours(baseHour + seasonAdjust, 0, 0, 0);
+                return fajrTime;
+            }
+            
+            // Function to format time
+            function formatTime(date) {
+                const hours = date.getHours().toString().padStart(2, '0');
+                const minutes = date.getMinutes().toString().padStart(2, '0');
+                return `${hours}:${minutes}`;
+            }
+        });
+    </script>
+</body>
+</html>
