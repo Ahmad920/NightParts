@@ -351,7 +351,7 @@
             document.getElementById('location-text').textContent = "جاري تحديد الموقع من جديد...";
             document.getElementById('midnight-time').textContent = "--:--";
             document.getElementById('last-third-time').textContent = "--:--";
-            document.getElementById('debug-info').innerHTML = "";
+            document.getElementById('debug-info').innerHTML = "بدء محاولة تحديد الموقع...";
             
             // استدعاء دالة تحديد الموقع من IP
             getLocationFromIP();
@@ -360,27 +360,32 @@
         document.addEventListener('DOMContentLoaded', function() {
             // مبدئياً نحاول الحصول على الموقع من خلال IP
             getLocationFromIP = function() {
+                document.getElementById('debug-info').innerHTML += "<br>محاولة تحديد الموقع من خلال IP...";
+                
                 // محاولة أولى: استخدام ipapi.co
                 fetch('https://ipapi.co/json/')
                     .then(response => {
                         if (!response.ok) {
-                            throw new Error('Network response was not ok');
+                            throw new Error('فشل الاتصال بخدمة ipapi.co');
                         }
                         return response.json();
                     })
                     .then(data => {
+                        document.getElementById('debug-info').innerHTML += "<br>تم استلام بيانات من ipapi.co";
                         processIPLocation(data);
                     })
                     .catch(error => {
-                        // محاولة ثانية: استخدام ipinfo.io كخدمة بديلة
+                        document.getElementById('debug-info').innerHTML += "<br>فشل في ipapi.co: " + error.message;
+                        // محاولة ثانية: استخدام ipinfo.io
                         fetch('https://ipinfo.io/json')
                             .then(response => {
                                 if (!response.ok) {
-                                    throw new Error('Network response was not ok');
+                                    throw new Error('فشل الاتصال بخدمة ipinfo.io');
                                 }
                                 return response.json();
                             })
                             .then(data => {
+                                document.getElementById('debug-info').innerHTML += "<br>تم استلام بيانات من ipinfo.io";
                                 // تحويل بيانات ipinfo.io إلى نفس هيكل بيانات ipapi.co
                                 if (data.loc) {
                                     const [lat, lon] = data.loc.split(',');
@@ -394,8 +399,31 @@
                                 processIPLocation(data);
                             })
                             .catch(error => {
-                                // If IP geolocation fails, try to get user's precise location
-                                getLocationFromBrowser();
+                                document.getElementById('debug-info').innerHTML += "<br>فشل في ipinfo.io: " + error.message;
+                                // محاولة ثالثة: استخدام geojs.io
+                                fetch('https://get.geojs.io/v1/ip/geo.json')
+                                    .then(response => {
+                                        if (!response.ok) {
+                                            throw new Error('فشل الاتصال بخدمة geojs.io');
+                                        }
+                                        return response.json();
+                                    })
+                                    .then(data => {
+                                        document.getElementById('debug-info').innerHTML += "<br>تم استلام بيانات من geojs.io";
+                                        // تحويل البيانات إلى نفس هيكل البيانات المطلوب
+                                        let processedData = {
+                                            latitude: parseFloat(data.latitude),
+                                            longitude: parseFloat(data.longitude),
+                                            city: data.city || "",
+                                            region: data.region || "",
+                                            country_name: data.country || ""
+                                        };
+                                        processIPLocation(processedData);
+                                    })
+                                    .catch(error => {
+                                        document.getElementById('debug-info').innerHTML += "<br>فشلت جميع محاولات تحديد الموقع عبر IP: " + error.message;
+                                        getLocationFromBrowser();
+                                    });
                             });
                     });
             };
@@ -409,6 +437,7 @@
                 const country = data.country_name || "";
                 
                 console.log("IP Location data:", data); // للتشخيص
+                document.getElementById('debug-info').innerHTML += `<br>بيانات الموقع: ${city}, ${region}, ${country}, [${latitude}, ${longitude}]`;
                 
                 // Format full location string with all available parts
                 let locationParts = [];
@@ -425,8 +454,10 @@
                 
                 // Calculate prayer times if we got valid coordinates
                 if (latitude && longitude) {
+                    document.getElementById('debug-info').innerHTML += `<br>تم العثور على الإحداثيات: (${latitude}, ${longitude})`;
                     calculatePrayerTimes(latitude, longitude);
                 } else {
+                    document.getElementById('debug-info').innerHTML += "<br>لم يتم العثور على إحداثيات صالحة، محاولة استخدام موقع المتصفح...";
                     // If IP geolocation fails, try to get user's precise location
                     getLocationFromBrowser();
                 }
