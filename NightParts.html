@@ -303,29 +303,12 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Get user's location
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(getLocationSuccess, getLocationError);
-            } else {
-                handleLocationFailure("متصفحك لا يدعم تحديد الموقع");
-            }
-            
-            // Function to handle successful location retrieval
-            function getLocationSuccess(position) {
-                const latitude = position.coords.latitude;
-                const longitude = position.coords.longitude;
-                
-                // Fetch city name based on coordinates
-                fetchLocationName(latitude, longitude);
-                
-                // Calculate prayer times
-                calculatePrayerTimes(latitude, longitude);
-            }
+            // مبدئياً نحاول الحصول على الموقع من خلال IP
+            getLocationFromIP();
             
             // Function to handle location error
             function getLocationError() {
-                // If geolocation fails, try to get location from IP
-                getLocationFromIP();
+                handleLocationFailure("تعذر تحديد الموقع");
             }
             
             // Function to get location from IP address
@@ -352,12 +335,44 @@
                         // Update location text
                         document.getElementById('location-text').textContent = locationText;
                         
-                        // Calculate prayer times
-                        calculatePrayerTimes(latitude, longitude);
+                        // Calculate prayer times if we got valid coordinates
+                        if (latitude && longitude) {
+                            calculatePrayerTimes(latitude, longitude);
+                        } else {
+                            // If IP geolocation fails, try to get user's precise location
+                            getLocationFromBrowser();
+                        }
                     })
                     .catch(error => {
-                        handleLocationFailure("تعذر تحديد الموقع");
+                        // If IP geolocation fails, try to get user's precise location
+                        getLocationFromBrowser();
                     });
+            }
+            
+            // Function to get location from browser geolocation API
+            function getLocationFromBrowser() {
+                document.getElementById('location-text').textContent = "جاري طلب تحديد الموقع من المتصفح...";
+                
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(getLocationSuccess, function() {
+                        // If browser geolocation fails, use fallback coordinates
+                        handleLocationFailure("تعذر تحديد الموقع الدقيق");
+                    });
+                } else {
+                    handleLocationFailure("متصفحك لا يدعم تحديد الموقع");
+                }
+            }
+            
+            // Function to handle successful location retrieval
+            function getLocationSuccess(position) {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+                
+                // Fetch city name based on coordinates
+                fetchLocationName(latitude, longitude);
+                
+                // Calculate prayer times
+                calculatePrayerTimes(latitude, longitude);
             }
             
             // Function to fetch location name
